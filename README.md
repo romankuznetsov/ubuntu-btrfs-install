@@ -1,8 +1,12 @@
 # Ubuntu + Btrfs + Automatic Snapshots
 
-This script creates Btrfs subvolumes (while still in Live CD/USB mode) for Ubuntu 24.04 (or newer) and compatible derivatives.
+**Update Note (May 2026):**
+
+*I've migrated to Fedora Silverblue (Fedora Atomic), which offers **native Btrfs support with snapshots and rollback via rpm-ostree** right after installation, without any extra configuration. This Ubuntu + Btrfs repository remains as historical reference, but I recommend Silverblue for modern immutable setups*.
 
 ## What the Script Does
+
+This script creates Btrfs subvolumes (while still in Live CD/USB mode) for Ubuntu 24.04 (or newer) and compatible derivatives.
 
 - Creates Btrfs subvolumes:  
   - `@home` `@log` `@cache` `@tmp` `@libvirt` `@flatpak` `@docker` `@containers` `@machines` `@var_tmp` `@opt` 
@@ -11,7 +15,7 @@ This script creates Btrfs subvolumes (while still in Live CD/USB mode) for Ubunt
 
 - Ubuntu 24.04 or newer installed with:  
   - Root filesystem using **Btrfs**  
-  - Separate **/boot** partition formatted as ext4 (1GB)  
+  - Separate **/boot** partition formatted as ext4 (2GB)  
   - (Optional) EFI partition for UEFI systems (1GB)  
 - Run the `ubuntu-btrfs-install` script from the **Live CD/USB** after Ubuntu is installed
 
@@ -32,12 +36,12 @@ This guide uses Ubuntu 25.04 as an example.
 3. **Create Partitions in the Correct Order**  
    - Create a new GPT partition table on the disk  
    - Create the **/boot/efi** partition:  
-     - Size: 1GB  
+     - Size: 2GB  
      - Format: FAT32 (vfat)  
      - Type: EFI System Partition  
      - Mount point: `/boot/efi`  
    - Create the **/boot** partition:  
-     - Size: 1GB  
+     - Size: 2GB  
      - Format: ext4  
      - Mount point: `/boot`  
    - Create the root **/** partition:  
