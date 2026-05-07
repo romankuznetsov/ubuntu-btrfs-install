@@ -36,7 +36,7 @@ This guide uses Ubuntu 25.04 as an example.
 3. **Create Partitions in the Correct Order**  
    - Create a new GPT partition table on the disk  
    - Create the **/boot/efi** partition:  
-     - Size: 2GB  
+     - Size: 1GB  
      - Format: FAT32 (vfat)  
      - Type: EFI System Partition  
      - Mount point: `/boot/efi`  
