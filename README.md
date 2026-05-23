@@ -196,7 +196,7 @@ MIT License — [View License](https://github.com/diogopessoa/ubuntu-btrfs-insta
 
 ## Credits
 
-* [Diogo Pessoa][https://github.com/diogopessoa) - Original Script Developer
+* [Diogo Pessoa](https://github.com/diogopessoa) - Original Script Developer
 * [openSUSE Team](https://github.com/openSUSE/snapper) — Snapper
 * [Antynea](https://github.com/Antynea/grub-btrfs) — grub-btrfs
 * [Dan Cantrell](https://gitlab.com/btrfs-assistant/btrfs-assistant) — Btrfs Assistant
