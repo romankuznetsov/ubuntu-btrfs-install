@@ -1,5 +1,6 @@
 #!/bin/bash
 # Author: Diogo Pessoa (https://github.com/diogopessoa)
+# Author: Michael Knight (https://github.com/sirwobbythefirst)
 # License: MIT
 # Description: Configure Ubuntu with Btrfs subvolumes and fstab entries.
 #              Installation of Snapper and Btrfs Assistant should be done after reboot.
@@ -47,9 +48,8 @@ create_subvols() {
     find -maxdepth 1 \! -name "@*" \! -name . -exec rm -Rf {} \;
 
     subvols=(
-        @home @log @cache @tmp @libvirt
-        @flatpak @docker @containers @machines
-        @var_tmp @opt
+        @home @log @cache @tmp
+        @root @srv
     )
 
     for subvol in "${subvols[@]}"; do
@@ -57,8 +57,10 @@ create_subvols() {
         mkdir -p "$subvol"
     done
 
-    [ -d var/log ] && mv var/log/* @log/ 2>/dev/null || true
-    [ -d var/cache ] && mv var/cache/* @cache/ 2>/dev/null || true
+    [ -d ./@/var/log ] && mv ./@/var/log/* @log/ 2>/dev/null || true
+    [ -d ./@/var/cache ] && mv ./@/var/cache/* @cache/ 2>/dev/null || true
+    [ -d ./@/home ] && mv ./@/home/* @home/ 2>/dev/null || true
+    [ -d ./@/root ] && mv ./@/root/.* @root/ 2>/dev/null || true
 
     cd /
     umount "$mp"
@@ -71,25 +73,21 @@ ajusta_fstab() {
     fstab_path="$mp/etc/fstab"
 
     sed -i "/ btrfs /d" "$fstab_path"
-    sed -i "/ swap /d" "$fstab_path"
+    sed -i "/ \/boot /d" "$fstab_path"
+    sed -i "/ \/boot\/efi /d" "$fstab_path"
 
     declare -A mountpoints=(
         [@]="/"
         [@home]="/home"
         [@log]="/var/log"
         [@cache]="/var/cache"
-        [@libvirt]="/var/lib/libvirt"
-        [@flatpak]="/var/lib/flatpak"
-        [@docker]="/var/lib/docker"
-        [@containers]="/var/lib/containers"
-        [@machines]="/var/lib/machines"
-        [@var_tmp]="/var/tmp"
-        [@tmp]="/tmp"
-        [@opt]="/opt"
+        [@tmp]="/var/tmp"
+        [@root]="/root"
+        [@srv]="/srv"
     )
 
     for subvol in "${!mountpoints[@]}"; do
-        echo "$root_uuid ${mountpoints[$subvol]} btrfs defaults,ssd,discard=async,noatime,space_cache=v2,compress=zstd:1,subvol=$subvol 0 0" >> "$fstab_path"
+        echo "$root_uuid ${mountpoints[$subvol]} btrfs defaults,ssd,discard=async,noatime,space_cache=v2,compress=zstd:3,subvol=$subvol 0 0" >> "$fstab_path"
     done
 
     boot_uuid=$(blkid --output export /dev/"$bootdev" | grep ^UUID=)
